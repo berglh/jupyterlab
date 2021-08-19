@@ -1,0 +1,21 @@
+version: "3.7"
+services:  
+  # needed sudo sysctl -w net.ipv4.ip_forward=1
+  # sudo systemctl stop ufwapt 
+  jupyterlab-pyspark:
+    container_name: jupyterlab-pyspark
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: jupyterlab-pyspark:latest
+    restart: unless-stopped
+    # set notebook server password as jupyter
+    entrypoint: ["start-notebook.sh", "--NotebookApp.password=sha256:bb8c050b9545:c21d963d0765635c8494c787935802d4511e0411fb3d4a555f45e2ab0a776c80"]
+    volumes:
+      - ./sample:/home/jovyan/work
+    environment:
+      - GRANT_SUDO=yes
+      - JUPYTER_ENABLE_LAB=yes
+    ports:
+      - 8888:8888
+      - 4040:4040
