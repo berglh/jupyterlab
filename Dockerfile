@@ -1,12 +1,12 @@
 # Pyspark
 
-FROM jupyter/pyspark-notebook:latest
+FROM jupyter/pyspark-notebook:spark-3.1.2
 LABEL maintainer="Berg Lloyd-Haig <berg@uq.edu.au>"
 
 USER root
 
 # You can revert to JRE8 to avoid errors on Pyspark load (Reflection Errors)
-# RUN apt-get update && apt-get purge -y openjdk-11-jre-headless && apt-get install -y openjdk-8-jre-headless curl && apt-get -y autoremove && apt-get clean
+RUN apt-get update && apt-get purge -y openjdk-11-jre-headless && apt-get install -y openjdk-8-jre-headless curl && apt-get -y autoremove && apt-get clean
 # othwerise, just cleanup apt in case
 RUN apt-get -y autoremove && apt-get clean
 
@@ -23,7 +23,8 @@ RUN printf 'jovyan:$5$evQjlKuZj$VfwL7JB8vTC7MFW6Zvo7OzPk3aXSnRiPST77ogUOnk/' | c
 USER ${NB_UID}
 
 # install and upgrade jupyterlab extensions
-RUN pip install --upgrade 'jupyterlab>=3' 'jupyterlab_server' 'pyspark' 'plotly'
+RUN pip uninstall pyspark
+RUN pip install --upgrade 'jupyterlab>=3' 'jupyterlab_server' 'pyspark==3.1.2' 'plotly'
 
 # instal spark monitor for spark session UI integreation to notebook
 RUN pip install jupyterlab-sparkmonitor plotly
